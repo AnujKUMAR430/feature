@@ -58,7 +58,7 @@ class YoutubeStyleVideoPlayer extends StatelessWidget {
                   children: [
                     GestureDetector(
                       onTap: controller.seekBackward,
-                      child: Icon(
+                      child: const Icon(
                         Icons.replay_10,
                         size: 30,
                         color: Colors.white,
@@ -66,7 +66,6 @@ class YoutubeStyleVideoPlayer extends StatelessWidget {
                     ),
                     GestureDetector(
                       onTap: controller.togglePlayPause,
-
                       child: Icon(
                         controller.videoController.value.isPlaying
                             ? Icons.pause_circle_filled
@@ -77,13 +76,13 @@ class YoutubeStyleVideoPlayer extends StatelessWidget {
                     ),
                     GestureDetector(
                       onTap: controller.seekForward,
-                      child: Icon(
+                      child: const Icon(
                         Icons.forward_10,
                         size: 30,
                         color: Colors.white,
                       ),
                     ),
-                  ].separatedBy(SizedBox(width: 10)),
+                  ].separatedBy(const SizedBox(width: 10)),
                 ),
               ),
               Align(
@@ -105,11 +104,13 @@ class YoutubeStyleVideoPlayer extends StatelessWidget {
                       children: [
                         Padding(
                           padding: const EdgeInsets.all(8.0),
-                          child: Text(
-                            controller.formatDuration(
-                              controller.videoController.value.position,
+                          child: Obx(
+                            () => Text(
+                              controller.formatDuration(
+                                controller.currentPosition.value,
+                              ),
+                              style: const TextStyle(color: Colors.white),
                             ),
-                            style: const TextStyle(color: Colors.white),
                           ),
                         ),
                         IconButton(

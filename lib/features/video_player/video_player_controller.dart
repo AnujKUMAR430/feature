@@ -10,7 +10,10 @@ class YoutubeStyleVideoPlayerController extends GetxController {
   final Duration skipDuration = const Duration(seconds: 10);
   Timer? _hideTimer;
 
-  // Added
+  // New
+  Rx<Duration> currentPosition = Duration.zero.obs;
+  Timer? _positionTimer;
+
   RxBool showForwardIcon = false.obs;
   RxBool showBackwardIcon = false.obs;
 
@@ -20,7 +23,16 @@ class YoutubeStyleVideoPlayerController extends GetxController {
         update();
         videoController.play();
         _startHideTimer();
+        _startPositionTracking(); // New
       });
+  }
+
+  void _startPositionTracking() {
+    _positionTimer = Timer.periodic(const Duration(milliseconds: 500), (timer) {
+      if (videoController.value.isInitialized) {
+        currentPosition.value = videoController.value.position;
+      }
+    });
   }
 
   void _startHideTimer() {
@@ -43,7 +55,6 @@ class YoutubeStyleVideoPlayerController extends GetxController {
       videoController.seekTo(videoController.value.duration);
     }
 
-    // Show icon
     showForwardIcon.value = true;
     Future.delayed(const Duration(seconds: 1), () {
       showForwardIcon.value = false;
@@ -60,7 +71,6 @@ class YoutubeStyleVideoPlayerController extends GetxController {
       videoController.seekTo(Duration.zero);
     }
 
-    // Show icon
     showBackwardIcon.value = true;
     Future.delayed(const Duration(seconds: 1), () {
       showBackwardIcon.value = false;
@@ -109,6 +119,7 @@ class YoutubeStyleVideoPlayerController extends GetxController {
   void onClose() {
     videoController.dispose();
     _hideTimer?.cancel();
+    _positionTimer?.cancel(); // Cancel position tracker
     SystemChrome.setEnabledSystemUIMode(
       SystemUiMode.manual,
       overlays: SystemUiOverlay.values,
