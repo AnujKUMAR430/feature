@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:reel_section/features/video_player/video_player_controller.dart';
+import 'package:reel_section/helper/extension.dart';
 import 'package:video_player/video_player.dart';
 
 class YoutubeStyleVideoPlayer extends StatelessWidget {
@@ -46,65 +47,88 @@ class YoutubeStyleVideoPlayer extends StatelessWidget {
       if (!controller.showControls.value) return const SizedBox.shrink();
 
       return Positioned.fill(
-        child: GestureDetector(
-          onTap: controller.togglePlayPause,
-          child: Container(
-            color: Colors.black45,
-            child: Stack(
-              children: [
-                Center(
-                  child: Icon(
-                    controller.videoController.value.isPlaying
-                        ? Icons.pause_circle_filled
-                        : Icons.play_circle_filled,
-                    size: 60,
-                    color: Colors.white,
-                  ),
+        child: Container(
+          color: Colors.black45,
+          child: Stack(
+            children: [
+              Center(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    GestureDetector(
+                      onTap: controller.seekBackward,
+                      child: Icon(
+                        Icons.replay_10,
+                        size: 30,
+                        color: Colors.white,
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: controller.togglePlayPause,
+
+                      child: Icon(
+                        controller.videoController.value.isPlaying
+                            ? Icons.pause_circle_filled
+                            : Icons.play_circle_filled,
+                        size: 60,
+                        color: Colors.white,
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: controller.seekForward,
+                      child: Icon(
+                        Icons.forward_10,
+                        size: 30,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ].separatedBy(SizedBox(width: 10)),
                 ),
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      VideoProgressIndicator(
-                        controller.videoController,
-                        allowScrubbing: true,
-                        colors: const VideoProgressColors(
-                          playedColor: Colors.red,
-                          bufferedColor: Colors.white38,
-                          backgroundColor: Colors.black26,
+              ),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    VideoProgressIndicator(
+                      controller.videoController,
+                      allowScrubbing: true,
+                      colors: const VideoProgressColors(
+                        playedColor: Colors.red,
+                        bufferedColor: Colors.white38,
+                        backgroundColor: Colors.black26,
+                      ),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            controller.formatDuration(
+                              controller.videoController.value.position,
+                            ),
+                            style: const TextStyle(color: Colors.white),
+                          ),
                         ),
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text(
-                              controller.formatDuration(
-                                controller.videoController.value.position,
-                              ),
-                              style: const TextStyle(color: Colors.white),
+                        IconButton(
+                          onPressed: controller.toggleFullscreen,
+                          icon: Obx(
+                            () => Icon(
+                              controller.isFullscreen.value
+                                  ? Icons.fullscreen_exit
+                                  : Icons.fullscreen,
+                              color: Colors.white,
                             ),
                           ),
-                          IconButton(
-                            onPressed: controller.toggleFullscreen,
-                            icon: Obx(
-                              () => Icon(
-                                controller.isFullscreen.value
-                                    ? Icons.fullscreen_exit
-                                    : Icons.fullscreen,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       );
