@@ -5,7 +5,9 @@ import 'package:reel_section/helper/config/color.dart';
 import 'package:video_player/video_player.dart';
 
 class VideoPreviewView extends StatefulWidget {
-  const VideoPreviewView({super.key});
+  final String videoUrl;
+
+  const VideoPreviewView({super.key, required this.videoUrl});
 
   @override
   State<VideoPreviewView> createState() => _VideoPreviewPageState();
@@ -16,7 +18,7 @@ class _VideoPreviewPageState extends State<VideoPreviewView> {
 
   @override
   void initState() {
-    videoPreviewController.init();
+    videoPreviewController.init(widget.videoUrl);
     super.initState();
   }
 

@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:reel_section/routes/routes.dart';
+import 'package:reel_section/features/reals/video_preview_view.dart';
 import 'package:video_player/video_player.dart';
 
 class VideoRecordAndPreviewController extends GetxController {
@@ -72,7 +72,8 @@ class VideoRecordAndPreviewController extends GetxController {
     _timer?.cancel();
     remainingSeconds.value = 0;
     if (videoPath.value.isNotEmpty) {
-      Get.toNamed(AppRoutes.videoPreviewRoute);
+      RxString videoPath = "".obs;
+      Get.to(VideoPreviewView(videoUrl: videoPath.value));
     }
   }
 
@@ -87,9 +88,9 @@ class VideoRecordAndPreviewController extends GetxController {
   late VideoPlayerController controller;
   RxBool isInitialized = false.obs;
 
-  void init() {
+  void init(String url) {
     isInitialized.value = false;
-    controller = VideoPlayerController.file(File(videoPath.value))
+    controller = VideoPlayerController.file(File(url))
       ..initialize().then((_) {
         isInitialized.value = true;
         controller.play();

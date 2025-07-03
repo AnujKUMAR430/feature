@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:reel_section/features/shorts_video_player.dart/short_video_player_view.dart';
 import 'package:reel_section/features/video_player/video_player_controller.dart';
 import 'package:reel_section/features/video_player/video_player_view.dart';
+import 'package:reel_section/features/video_recoding_using_camera_package/video_record_using_camera_package_view.dart';
 import 'package:reel_section/helper/extension.dart';
 import 'package:reel_section/routes/routes.dart';
 
@@ -47,10 +48,20 @@ class _SplashViewState extends State<SplashView> {
                 "Which Fetaure U Wnat to check !",
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
+
+              // Native
+
+              // _commonButton(
+              //   title: "Record video",
+              //   onPressed: () => Get.toNamed(AppRoutes.recordVideoRoute),
+              // ),
+
+              // using camrea package
               _commonButton(
-                title: "Record video",
-                onPressed: () => Get.toNamed(AppRoutes.recordVideoRoute),
+                title: "Record video ",
+                onPressed: () => Get.to(VideoRecorderPage()),
               ),
+
               _commonButton(
                 title: "Video Player Like Youtube",
                 onPressed: () => Get.to(

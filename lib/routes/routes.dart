@@ -7,7 +7,7 @@ class AppRoutes {
   //  * Variables * //
   static const String initialRoute = '/';
   static const String recordVideoRoute = '/recordVideo';
-  static const String videoPreviewRoute = '/videoPreview';
+  // static const String videoPreviewRoute = '/videoPreview';
 
   /// * Constructors * ///
   AppRoutes();
@@ -17,7 +17,7 @@ class AppRoutes {
     return [
       GetPage(name: initialRoute, page: () => const SplashView()),
       GetPage(name: recordVideoRoute, page: () => const RecordVideoView()),
-      GetPage(name: videoPreviewRoute, page: () => const VideoPreviewView()),
+      // GetPage(name: videoPreviewRoute, page: () => const VideoPreviewView()),
     ];
   }
 }
