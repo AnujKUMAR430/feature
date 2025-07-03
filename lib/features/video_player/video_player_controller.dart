@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:video_player/video_player.dart';
@@ -10,6 +9,10 @@ class YoutubeStyleVideoPlayerController extends GetxController {
   RxBool isFullscreen = false.obs;
   final Duration skipDuration = const Duration(seconds: 10);
   Timer? _hideTimer;
+
+  // Added
+  RxBool showForwardIcon = false.obs;
+  RxBool showBackwardIcon = false.obs;
 
   void initialize(String url) {
     videoController = VideoPlayerController.networkUrl(Uri.parse(url))
@@ -36,7 +39,16 @@ class YoutubeStyleVideoPlayerController extends GetxController {
     final target = videoController.value.position + skipDuration;
     if (target < videoController.value.duration) {
       videoController.seekTo(target);
+    } else {
+      videoController.seekTo(videoController.value.duration);
     }
+
+    // Show icon
+    showForwardIcon.value = true;
+    Future.delayed(const Duration(seconds: 1), () {
+      showForwardIcon.value = false;
+    });
+
     _startHideTimer();
   }
 
@@ -47,6 +59,13 @@ class YoutubeStyleVideoPlayerController extends GetxController {
     } else {
       videoController.seekTo(Duration.zero);
     }
+
+    // Show icon
+    showBackwardIcon.value = true;
+    Future.delayed(const Duration(seconds: 1), () {
+      showBackwardIcon.value = false;
+    });
+
     _startHideTimer();
   }
 

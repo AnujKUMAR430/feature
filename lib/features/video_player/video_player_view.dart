@@ -122,7 +122,18 @@ class YoutubeStyleVideoPlayer extends StatelessWidget {
                 onDoubleTap: controller.seekBackward,
                 onTap: controller.toggleControls,
                 behavior: HitTestBehavior.translucent,
-                child: Container(color: Colors.transparent),
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    Container(color: Colors.transparent),
+                    if (controller.showBackwardIcon.value)
+                      const Icon(
+                        Icons.replay_10,
+                        size: 60,
+                        color: Colors.white,
+                      ),
+                  ],
+                ),
               ),
             ),
             Expanded(
@@ -130,7 +141,18 @@ class YoutubeStyleVideoPlayer extends StatelessWidget {
                 onDoubleTap: controller.seekForward,
                 onTap: controller.toggleControls,
                 behavior: HitTestBehavior.translucent,
-                child: Container(color: Colors.transparent),
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    Container(color: Colors.transparent),
+                    if (controller.showForwardIcon.value)
+                      const Icon(
+                        Icons.forward_10,
+                        size: 60,
+                        color: Colors.white,
+                      ),
+                  ],
+                ),
               ),
             ),
           ],
