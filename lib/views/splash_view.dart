@@ -4,6 +4,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:reel_section/features/shorts_video_player.dart/short_video_player_view.dart';
 import 'package:reel_section/features/video_player/video_player_controller.dart';
 import 'package:reel_section/features/video_player/video_player_view.dart';
 import 'package:reel_section/helper/extension.dart';
@@ -59,15 +60,15 @@ class _SplashViewState extends State<SplashView> {
                   ),
                 ),
               ),
-              // _commonButton(
-              //   title: "Video Player Like Youtube Shorts",
-              //   onPressed: () => Get.to(
-              //     YoutubeStyleVideoPlayer(
-              //       videoUrl:
-              //           "http://vfx.mtime.cn/Video/2019/03/19/mp4/190319222227698228.mp4",
-              //     ),
-              //   ),
-              // ),
+              _commonButton(
+                title: "Video Player Like Youtube Shorts",
+                onPressed: () => Get.to(
+                  ShortsVideoPlayerView(
+                    videoUrl:
+                        'https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4',
+                  ),
+                ),
+              ),
             ].separatedBy(SizedBox(height: 10)),
           ),
         ),
