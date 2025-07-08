@@ -19,13 +19,11 @@ class _ImageCropExampleState extends State<ImageCropExample> {
   File? _croppedImageFile;
 
   Future<void> _pickAndCropImage() async {
-    // Step 1: Pick image from gallery
     final XFile? pickedFile = await _picker.pickImage(
       source: ImageSource.gallery,
     );
     if (pickedFile == null) return;
 
-    // Step 2: Crop the image using Croppy
     final CropImageResult? result = await showMaterialImageCropper(
       context,
       imageProvider: FileImage(File(pickedFile.path)),
@@ -33,6 +31,9 @@ class _ImageCropExampleState extends State<ImageCropExample> {
       enabledTransformations: [Transformation.resize],
       allowedAspectRatios: null,
       themeData: ThemeData(
+        //
+        scaffoldBackgroundColor: Colors.black,
+
         iconTheme: IconThemeData(size: 0),
         iconButtonTheme: IconButtonThemeData(
           style: ButtonStyle(
@@ -44,10 +45,9 @@ class _ImageCropExampleState extends State<ImageCropExample> {
       ),
     );
 
-    // Step 3: Convert the result to bytes and save to a temporary file
     if (result != null) {
-      debugPrint('-----imamge cropped successfully -->');
-
+      // debugPrint('-----imamge cropped successfully -->');
+      // // if you also want to preview crop image then uncomment the below code okk
       // final ui.Image uiImage = result.uiImage;
       // final byteData = await uiImage.toByteData(format: ui.ImageByteFormat.png);
 
