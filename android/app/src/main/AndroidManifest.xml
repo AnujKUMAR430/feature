@@ -9,12 +9,18 @@
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
     <uses-permission android:name="android.permission.INTERNET"/>
+    <!-- <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/> -->
+
+
 
     <application
         android:label="reel_section"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher"
-        android:requestLegacyExternalStorage="true">
+        android:requestLegacyExternalStorage="true"
+        android.enableOnBackInvokedCallback = "true">
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -42,6 +48,10 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
+
+        <!-- <meta-data
+            android:name="MAPMYINDIA_GL_ACCESS_TOKEN"
+            android:value="8a2bd893e47ebcb1721d4c7128e823d5" />     -->
     </application>
     <!-- Required to query activities that can process text, see:
          https://developer.android.com/training/package-visibility and

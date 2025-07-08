@@ -4,6 +4,10 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:reel_section/features/crop_image/pick_image_from_gallery.dart';
+import 'package:reel_section/features/map/map_view.dart';
+import 'package:reel_section/features/post/image_post/image_post_view.dart';
+import 'package:reel_section/features/post/text_post/text_post_view.dart';
 import 'package:reel_section/features/shorts_video_player.dart/short_video_player_view.dart';
 import 'package:reel_section/features/video_player/video_player_controller.dart';
 import 'package:reel_section/features/video_player/video_player_view.dart';
@@ -79,6 +83,18 @@ class _SplashViewState extends State<SplashView> {
                         'https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4',
                   ),
                 ),
+              ),
+              _commonButton(
+                title: "Crop image",
+                onPressed: () => Get.to(ImageCropExample()),
+              ),
+              _commonButton(
+                title: "Text Post",
+                onPressed: () => Get.to(ThoughtPostPage()),
+              ),
+              _commonButton(
+                title: "Image Post",
+                onPressed: () => Get.to(ImageTextEditor()),
               ),
             ].separatedBy(SizedBox(height: 10)),
           ),
