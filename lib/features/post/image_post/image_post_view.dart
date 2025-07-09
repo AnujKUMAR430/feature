@@ -23,8 +23,8 @@ class FacebookImagePreviewPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
-        title: const Text("Post Image"),
-        // backgroundColor: Colors.black,
+        title: const Text("Image Preview"),
+        backgroundColor: Colors.black,
         actions: [
           IconButton(
             icon: const Icon(Icons.photo_library),
@@ -41,14 +41,12 @@ class FacebookImagePreviewPage extends StatelessWidget {
         ],
       ),
       body: GestureDetector(
+        behavior: HitTestBehavior.opaque,
         onTap: () {
           FocusScope.of(context).unfocus();
         },
         child: Obx(() {
           final image = controller.selectedImage.value;
-          final showText = controller.showTextOverlay.value;
-          final showColorPicker = controller.showColorPicker.value;
-          final overlayColor = controller.overlayBackgroundColor.value;
           final textCtrl = controller.textController.value;
 
           if (image == null) {
@@ -62,40 +60,89 @@ class FacebookImagePreviewPage extends StatelessWidget {
 
           return Stack(
             children: [
-              // ✅ Image
+              // ✅ Background image
               Positioned.fill(child: Image.file(image, fit: BoxFit.cover)),
 
-              // ✅ Text Overlay (centered)
-              if (showText && textCtrl != null)
-                Center(
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 8,
-                    ),
-                    decoration: BoxDecoration(
-                      color: overlayColor,
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: TextField(
-                      controller: textCtrl,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 28,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      maxLines: null,
-                      decoration: const InputDecoration(
-                        hintText: "Type here...",
-                        hintStyle: TextStyle(color: Colors.white38),
-                        border: InputBorder.none,
+              // ✅ Text overlay with gesture support
+              if (controller.showTextOverlay.value && textCtrl != null)
+                Positioned.fill(
+                  child: GestureDetector(
+                    onScaleStart: (details) {
+                      controller.initialRotation.value =
+                          controller.overlayRotation.value;
+                    },
+
+                    onScaleUpdate: (details) {
+                      controller.overlayPosition.value +=
+                          details.focalPointDelta;
+
+                      // Clamp scale
+                      controller.overlayScale.value =
+                          (controller.overlayScale.value * details.scale).clamp(
+                            0.5,
+                            5.0,
+                          );
+
+                      // Apply rotation relative to starting point
+                      controller.overlayRotation.value =
+                          controller.initialRotation.value + details.rotation;
+                    },
+
+                    child: Obx(
+                      () => Stack(
+                        children: [
+                          Positioned(
+                            left: controller.overlayPosition.value.dx,
+                            top: controller.overlayPosition.value.dy,
+                            child: Transform.rotate(
+                              angle: controller.overlayRotation.value,
+                              child: Transform.scale(
+                                scale: controller.overlayScale.value,
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 16,
+                                    vertical: 8,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color:
+                                        controller.overlayBackgroundColor.value,
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  child: ConstrainedBox(
+                                    constraints: const BoxConstraints(
+                                      minWidth: 100,
+                                      maxWidth:
+                                          300, // ✅ FIX for InputDecorator error
+                                    ),
+                                    child: TextField(
+                                      controller: textCtrl,
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 28,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                      maxLines: null,
+                                      decoration: const InputDecoration(
+                                        hintText: "Type here...",
+                                        hintStyle: TextStyle(
+                                          color: Colors.white38,
+                                        ),
+                                        border: InputBorder.none,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ),
                 ),
 
               // ✅ Color Picker
-              if (showColorPicker)
+              if (controller.showColorPicker.value)
                 Positioned(
                   bottom: 8,
                   left: 0,

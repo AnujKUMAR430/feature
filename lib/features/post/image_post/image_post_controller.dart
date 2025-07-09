@@ -1,6 +1,9 @@
 import 'dart:io';
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:get/get_rx/src/rx_types/rx_types.dart';
+import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 import 'package:image_picker/image_picker.dart';
 
 class FacebookImagePreviewController extends GetxController {
@@ -13,6 +16,12 @@ class FacebookImagePreviewController extends GetxController {
   RxBool showColorPicker = false.obs;
   Rx<Color> overlayBackgroundColor = Colors.black45.obs;
 
+  // 🆕 For drag, scale, rotate
+  Rx<Offset> overlayPosition = Offset(0, 0).obs;
+  RxDouble overlayScale = 1.0.obs;
+  RxDouble overlayRotation = 0.0.obs;
+  RxDouble initialRotation = 0.0.obs;
+
   Future<void> pickImageFromGallery() async {
     final image = await picker.pickImage(source: ImageSource.gallery);
     if (image != null) {
@@ -21,6 +30,9 @@ class FacebookImagePreviewController extends GetxController {
       textController.value = null;
       showColorPicker.value = false;
       overlayBackgroundColor.value = Colors.black45;
+      overlayPosition.value = Offset(0, 0);
+      overlayScale.value = 1.0;
+      overlayRotation.value = 0.0;
     }
   }
 
@@ -29,6 +41,9 @@ class FacebookImagePreviewController extends GetxController {
     showTextOverlay.value = true;
     showColorPicker.value = false;
     overlayBackgroundColor.value = Colors.black45;
+    overlayPosition.value = Offset(0, 0);
+    overlayScale.value = 1.0;
+    overlayRotation.value = 0.0;
   }
 
   void toggleColorPicker() {
