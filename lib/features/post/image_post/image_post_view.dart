@@ -2,7 +2,9 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:reel_section/features/post/image_post/image_post_controller.dart';
+import 'package:reel_section/features/post/image_post/image_post_preview.dart';
 
+// ignore: use_key_in_widget_constructors
 class FacebookImagePreviewPage extends StatelessWidget {
   final FacebookImagePreviewController controller = Get.put(
     FacebookImagePreviewController(),
@@ -11,10 +13,15 @@ class FacebookImagePreviewPage extends StatelessWidget {
   final List<Color> bgColors = [
     Colors.black45,
     Colors.white70,
+    // ignore: deprecated_member_use
     Colors.red.withOpacity(0.6),
+    // ignore: deprecated_member_use
     Colors.blue.withOpacity(0.6),
+    // ignore: deprecated_member_use
     Colors.green.withOpacity(0.6),
+    // ignore: deprecated_member_use
     Colors.purple.withOpacity(0.6),
+    // ignore: deprecated_member_use
     Colors.orange.withOpacity(0.6),
   ];
 
@@ -23,16 +30,23 @@ class FacebookImagePreviewPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
-        title: const Text("Image Preview"),
-        backgroundColor: Colors.black,
+        title: const Text("Post Image"),
         actions: [
+          //           IconButton(
+          //   icon: const Icon(Icons.remove_red_eye),
+          //   onPressed: () {
+          //     Get.to(() => FacebookImagePreviewFinalScreen());
+          //   },
+          // ),
           IconButton(
             icon: const Icon(Icons.photo_library),
             onPressed: controller.pickImageFromGallery,
           ),
           IconButton(
             icon: const Icon(Icons.add),
-            onPressed: controller.addTextOverlay,
+            onPressed: () {
+              controller.addTextOverlay(context);
+            },
           ),
           IconButton(
             icon: const Icon(Icons.color_lens),
@@ -110,7 +124,7 @@ class FacebookImagePreviewPage extends StatelessWidget {
                                   ),
                                   child: ConstrainedBox(
                                     constraints: const BoxConstraints(
-                                      minWidth: 100,
+                                      minWidth: 50,
                                       maxWidth:
                                           300, // ✅ FIX for InputDecorator error
                                     ),
@@ -123,7 +137,7 @@ class FacebookImagePreviewPage extends StatelessWidget {
                                       ),
                                       maxLines: null,
                                       decoration: const InputDecoration(
-                                        hintText: "Type here...",
+                                        hintText: "@tag....",
                                         hintStyle: TextStyle(
                                           color: Colors.white38,
                                         ),
@@ -149,6 +163,7 @@ class FacebookImagePreviewPage extends StatelessWidget {
                   right: 0,
                   child: Container(
                     height: 60,
+                    // ignore: deprecated_member_use
                     color: Colors.black.withOpacity(0.6),
                     padding: const EdgeInsets.symmetric(
                       horizontal: 12,

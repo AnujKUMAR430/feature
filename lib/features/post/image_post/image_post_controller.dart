@@ -36,12 +36,18 @@ class FacebookImagePreviewController extends GetxController {
     }
   }
 
-  void addTextOverlay() {
+  void addTextOverlay(BuildContext context) {
+    final screenSize = MediaQuery.of(context).size;
+    final centerOffset = Offset(
+      screenSize.width / 2 - 165,
+      screenSize.height / 2 - 100,
+    ); // approx center for text box
+
     textController.value = TextEditingController();
     showTextOverlay.value = true;
     showColorPicker.value = false;
     overlayBackgroundColor.value = Colors.black45;
-    overlayPosition.value = Offset(0, 0);
+    overlayPosition.value = centerOffset;
     overlayScale.value = 1.0;
     overlayRotation.value = 0.0;
   }
