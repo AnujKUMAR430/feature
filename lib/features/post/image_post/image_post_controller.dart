@@ -22,6 +22,8 @@ class FacebookImagePreviewController extends GetxController {
   RxDouble overlayRotation = 0.0.obs;
   RxDouble initialRotation = 0.0.obs;
 
+  RxDouble initialScale = 1.0.obs;
+
   Future<void> pickImageFromGallery() async {
     final image = await picker.pickImage(source: ImageSource.gallery);
     if (image != null) {

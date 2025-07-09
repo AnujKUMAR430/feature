@@ -81,27 +81,48 @@ class FacebookImagePreviewPage extends StatelessWidget {
               if (controller.showTextOverlay.value && textCtrl != null)
                 Positioned.fill(
                   child: GestureDetector(
+                    // Inside your widget:
                     onScaleStart: (details) {
                       controller.initialRotation.value =
                           controller.overlayRotation.value;
+                      controller.initialScale.value =
+                          controller.overlayScale.value;
                     },
 
                     onScaleUpdate: (details) {
                       controller.overlayPosition.value +=
                           details.focalPointDelta;
 
-                      // Clamp scale
-                      controller.overlayScale.value =
-                          (controller.overlayScale.value * details.scale).clamp(
-                            0.5,
-                            5.0,
-                          );
+                      // ✅ Calculate scale based on initialScale
+                      double newScale =
+                          controller.initialScale.value * details.scale;
+                      controller.overlayScale.value = newScale.clamp(0.5, 3.0);
 
-                      // Apply rotation relative to starting point
+                      // ✅ Smooth rotation
                       controller.overlayRotation.value =
                           controller.initialRotation.value + details.rotation;
                     },
 
+                    // onScaleStart: (details) {
+                    //   controller.initialRotation.value =
+                    //       controller.overlayRotation.value;
+                    // },
+
+                    // onScaleUpdate: (details) {
+                    //   controller.overlayPosition.value +=
+                    //       details.focalPointDelta;
+
+                    //   // Clamp scale
+                    //   controller.overlayScale.value =
+                    //       (controller.overlayScale.value * details.scale).clamp(
+                    //         0.5,
+                    //         5.0,
+                    //       );
+
+                    //   // Apply rotation relative to starting point
+                    //   controller.overlayRotation.value =
+                    //       controller.initialRotation.value + details.rotation;
+                    // },
                     child: Obx(
                       () => Stack(
                         children: [
