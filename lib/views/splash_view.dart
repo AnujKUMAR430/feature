@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:reel_section/features/crop_image/pick_image_from_gallery.dart';
 import 'package:reel_section/features/map/map_view.dart';
+import 'package:reel_section/features/osm_map/osm_map_view.dart';
 import 'package:reel_section/features/post/image_post/image_post_view.dart';
 import 'package:reel_section/features/post/text_post/text_post_view.dart';
 import 'package:reel_section/features/shorts_video_player.dart/short_video_player_view.dart';
@@ -95,6 +96,10 @@ class _SplashViewState extends State<SplashView> {
               _commonButton(
                 title: "Image Post",
                 onPressed: () => Get.to(FacebookImagePreviewPage()),
+              ),
+              _commonButton(
+                title: "Map",
+                onPressed: () => Get.to(OSMCurrentLocationPage()),
               ),
             ].separatedBy(SizedBox(height: 10)),
           ),
