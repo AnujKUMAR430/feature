@@ -1,175 +1,139 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'dart:io';
-
 import 'package:reel_section/features/post/image_post/image_post_controller.dart';
-import 'package:reel_section/features/post/image_post/image_post_preview.dart';
 
-class ImageTextEditor extends StatelessWidget {
-  ImageTextEditor({super.key});
-  final controller = Get.put(TextEditorController());
+class FacebookImagePreviewPage extends StatelessWidget {
+  final FacebookImagePreviewController controller = Get.put(
+    FacebookImagePreviewController(),
+  );
 
-  void openTextEditor(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      builder: (_) => Padding(
-        padding: const EdgeInsets.all(16),
-        child: Obx(
-          () => Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextField(
-                controller: controller.textController,
-                decoration: const InputDecoration(labelText: 'Enter Text'),
-                onChanged: controller.updateText,
-              ),
-              const SizedBox(height: 10),
-              Row(
-                children: [const Text("Text Color: "), ...buildColorOptions()],
-              ),
-              const SizedBox(height: 10),
-              Row(
-                children: [
-                  const Text("Font Size: "),
-                  Expanded(
-                    child: Slider(
-                      value: controller.fontSize.value,
-                      min: 10,
-                      max: 80,
-                      onChanged: controller.updateFontSize,
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  List<Widget> buildColorOptions() {
-    final colors = [
-      Colors.white,
-      Colors.black,
-      Colors.red,
-      Colors.green,
-      Colors.blue,
-      Colors.orange,
-      Colors.purple,
-    ];
-
-    return colors
-        .map(
-          (color) => Obx(
-            () => GestureDetector(
-              onTap: () => controller.updateColor(color),
-              child: Container(
-                margin: const EdgeInsets.symmetric(horizontal: 4),
-                width: 24,
-                height: 24,
-                decoration: BoxDecoration(
-                  color: color,
-                  shape: BoxShape.circle,
-                  border: Border.all(
-                    color: controller.textColor.value == color
-                        ? Colors.grey
-                        : Colors.transparent,
-                    width: 2,
-                  ),
-                ),
-              ),
-            ),
-          ),
-        )
-        .toList();
-  }
-
-  void goToPreviewScreen(BuildContext context) {
-    if (controller.image.value != null) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (_) => PreviewScreen(
-            image: controller.image.value!,
-            text: controller.text.value,
-            textColor: controller.textColor.value,
-            fontSize: controller.fontSize.value,
-            textPosition: controller.textPosition.value,
-          ),
-        ),
-      );
-    }
-  }
+  final List<Color> bgColors = [
+    Colors.black45,
+    Colors.white70,
+    Colors.red.withOpacity(0.6),
+    Colors.blue.withOpacity(0.6),
+    Colors.green.withOpacity(0.6),
+    Colors.purple.withOpacity(0.6),
+    Colors.orange.withOpacity(0.6),
+  ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.black,
       appBar: AppBar(
-        title: const Text("Image Text Editor"),
+        title: const Text("Post Image"),
+        // backgroundColor: Colors.black,
         actions: [
           IconButton(
-            icon: const Icon(Icons.text_fields),
-            onPressed: () => openTextEditor(context),
+            icon: const Icon(Icons.photo_library),
+            onPressed: controller.pickImageFromGallery,
           ),
           IconButton(
-            icon: const Icon(Icons.remove_red_eye),
-            onPressed: () => goToPreviewScreen(context),
+            icon: const Icon(Icons.add),
+            onPressed: controller.addTextOverlay,
+          ),
+          IconButton(
+            icon: const Icon(Icons.color_lens),
+            onPressed: controller.toggleColorPicker,
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: controller.pickImage,
-        child: const Icon(Icons.image),
-      ),
-      body: Obx(() {
-        final image = controller.image.value;
-        final text = controller.text.value;
-        final position = controller.textPosition.value;
-        final fontSize = controller.fontSize.value;
-        final color = controller.textColor.value;
+      body: GestureDetector(
+        onTap: () {
+          FocusScope.of(context).unfocus();
+        },
+        child: Obx(() {
+          final image = controller.selectedImage.value;
+          final showText = controller.showTextOverlay.value;
+          final showColorPicker = controller.showColorPicker.value;
+          final overlayColor = controller.overlayBackgroundColor.value;
+          final textCtrl = controller.textController.value;
 
-        return image == null
-            ? const Center(child: Text("Pick an image"))
-            : Stack(
-                children: [
-                  Positioned.fill(child: Image.file(image, fit: BoxFit.cover)),
-                  Positioned.fill(
-                    child: GestureDetector(
-                      onPanUpdate: (details) =>
-                          controller.updatePosition(details.delta),
-                      child: Stack(
-                        children: [
-                          if (text.isNotEmpty)
-                            Positioned(
-                              left: position.dx,
-                              top: position.dy,
-                              child: Container(
-                                constraints: BoxConstraints(
-                                  maxWidth:
-                                      MediaQuery.of(context).size.width -
-                                      position.dx -
-                                      20,
-                                ),
-                                child: Text(
-                                  text,
-                                  softWrap: true,
-                                  overflow: TextOverflow.visible,
-                                  style: TextStyle(
-                                    color: color,
-                                    fontSize: fontSize,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                            ),
-                        ],
+          if (image == null) {
+            return const Center(
+              child: Text(
+                "Tap the gallery icon to select an image",
+                style: TextStyle(color: Colors.white70),
+              ),
+            );
+          }
+
+          return Stack(
+            children: [
+              // ✅ Image
+              Positioned.fill(child: Image.file(image, fit: BoxFit.cover)),
+
+              // ✅ Text Overlay (centered)
+              if (showText && textCtrl != null)
+                Center(
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 8,
+                    ),
+                    decoration: BoxDecoration(
+                      color: overlayColor,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: TextField(
+                      controller: textCtrl,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 28,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      maxLines: null,
+                      decoration: const InputDecoration(
+                        hintText: "Type here...",
+                        hintStyle: TextStyle(color: Colors.white38),
+                        border: InputBorder.none,
                       ),
                     ),
                   ),
-                ],
-              );
-      }),
+                ),
+
+              // ✅ Color Picker
+              if (showColorPicker)
+                Positioned(
+                  bottom: 8,
+                  left: 0,
+                  right: 0,
+                  child: Container(
+                    height: 60,
+                    color: Colors.black.withOpacity(0.6),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 8,
+                    ),
+                    child: ListView.separated(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: bgColors.length,
+                      separatorBuilder: (_, __) => const SizedBox(width: 12),
+                      itemBuilder: (context, index) {
+                        final color = bgColors[index];
+                        return GestureDetector(
+                          onTap: () =>
+                              controller.changeOverlayBackgroundColor(color),
+                          child: Container(
+                            width: 36,
+                            height: 36,
+                            decoration: BoxDecoration(
+                              color: color,
+                              shape: BoxShape.circle,
+                              border: Border.all(color: Colors.white, width: 2),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ),
+            ],
+          );
+        }),
+      ),
     );
   }
 }

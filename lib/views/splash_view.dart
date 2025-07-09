@@ -94,7 +94,7 @@ class _SplashViewState extends State<SplashView> {
               ),
               _commonButton(
                 title: "Image Post",
-                onPressed: () => Get.to(ImageTextEditor()),
+                onPressed: () => Get.to(FacebookImagePreviewPage()),
               ),
             ].separatedBy(SizedBox(height: 10)),
           ),

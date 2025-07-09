@@ -3,34 +3,39 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
-class TextEditorController extends GetxController {
-  Rx<File?> image = Rx<File?>(null);
-  RxString text = ''.obs;
-  Rx<Color> textColor = Colors.white.obs;
-  RxDouble fontSize = 24.0.obs;
-  Rx<Offset> textPosition = const Offset(100, 100).obs;
-  final textController = TextEditingController();
+class FacebookImagePreviewController extends GetxController {
+  Rx<File?> selectedImage = Rx<File?>(null);
+  final ImagePicker picker = ImagePicker();
 
-  Future<void> pickImage() async {
-    final pickedFile = await ImagePicker().pickImage(
-      source: ImageSource.gallery,
-    );
-    if (pickedFile != null) image.value = File(pickedFile.path);
+  Rx<TextEditingController?> textController = Rx<TextEditingController?>(null);
+  RxBool showTextOverlay = false.obs;
+
+  RxBool showColorPicker = false.obs;
+  Rx<Color> overlayBackgroundColor = Colors.black45.obs;
+
+  Future<void> pickImageFromGallery() async {
+    final image = await picker.pickImage(source: ImageSource.gallery);
+    if (image != null) {
+      selectedImage.value = File(image.path);
+      showTextOverlay.value = false;
+      textController.value = null;
+      showColorPicker.value = false;
+      overlayBackgroundColor.value = Colors.black45;
+    }
   }
 
-  void updateText(String value) {
-    text.value = value;
+  void addTextOverlay() {
+    textController.value = TextEditingController();
+    showTextOverlay.value = true;
+    showColorPicker.value = false;
+    overlayBackgroundColor.value = Colors.black45;
   }
 
-  void updateFontSize(double size) {
-    fontSize.value = size;
+  void toggleColorPicker() {
+    showColorPicker.value = !showColorPicker.value;
   }
 
-  void updateColor(Color color) {
-    textColor.value = color;
-  }
-
-  void updatePosition(Offset delta) {
-    textPosition.value += delta;
+  void changeOverlayBackgroundColor(Color color) {
+    overlayBackgroundColor.value = color;
   }
 }
